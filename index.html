@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorant Strategy Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0f1923;
+            color: #ece8e1;
+            font-family: Arial, sans-serif;
+        }
+        h1, h2, h3, .navbar, button {
+            font-family: Arial, sans-serif;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(15,25,35,0.9) 0%, rgba(42,42,42,0.9) 100%);
+        }
+        .login-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .login-form h2 {
+            color: #0f1923;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        .login-form h3 {
+            color: #ff4655;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+        .login-form input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            color: #0f1923;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        .login-form input:focus {
+            border-color: #ff4655;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255,70,85,0.2);
+        }
+
+        .create-account-link {
+            color: #ff4655;
+            text-decoration: none;
+            display: block;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .create-account-link:hover {
+            color: #e03c4a;
+            text-decoration: underline;
+        }
+        .navbar {
+            background: #0f1923;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ff4655;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        .filter-container{
+            padding: 1rem 2rem;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        #role-filter {
+            background: #2a2a2a;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ff4655;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+        .agent-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .agent-card{
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+
+        .agent-card:hover {
+            border-color: #ff4655;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(255, 70, 85, 0.2);
+        }
+
+        .agent-image-grid {
+            width: 100%;
+            height: 320px;
+            object-fit: contain;
+            border-bottom: 3px solid #ff4655;
+            padding: 1rem;
+        }
+        .agent-details {
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
+        }
+        .agent-image-container{
+            flex: 1;
+            max-width: 600px;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .agent-image-details{
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 8px;
+            filter: drop-shadow(0 0 12px rgba(255, 70, 85, 0.3));
+        }
+
+        .agent-info{
+            flex: 1;
+            padding: 1rem;
+        }
+        .abilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+        .ability-card{
+            background: rgba(255,255,255,0.05);
+            padding: 0.6rem;
+            border-radius: 6px;
+            border: 1px solid #ff4655;
+            text-align: center;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .ability-card:hover{
+            transform: translateY(-3px);
+        }
+        .ability-icon {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin: 0 auto 0.3rem;
+        }
+        .ability-card h4 {
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+        }
+        .ability-card p {
+            font-size: 0.75rem;
+            line-height: 1.3;
+            margin-top: 0.3rem;
+        }
+        button{
+            background: #ff4655;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin: 0.5rem;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        button:hover{
+            background: #e03c4a;
+            transform: scale(1.05);
+        }
+        .login-form button {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            font-size: 1rem;
+            letter-spacing: 1.5px;
+        }
+        .comments-section{
+            margin-top: 3rem;
+            background: rgba(255,255,255,0.03);
+            padding: 2rem;
+            border-radius: 8px;
+            border-top: 3px solid #ff4655;
+        }
+        .comment{
+            background: #2a2a2a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #ff4655;
+            border-radius: 4px;
+        }
+        #new-comment{
+            width: 100%;
+            padding: 1rem;
+            background: #2a2a2a;
+            border: 1px solid #ff4655;
+            color: white;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        #new-comment:focus{
+            border-color: #e03c4a;
+            box-shadow: 0 0 12px rgba(255, 70, 85, 0.2);
+        }
+        .vote-buttons{
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
+        }
+        .vote-button{
+            background: none;
+            border: none;
+            color: #ece8e1;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 8px;
+        }
+        .vote-button:hover {
+            color: #ff4655;}
+        
+        .vote-count{
+            font-weight: bold;
+            margin: 0 4px;
+            min-width: 20px;
+            text-align: center;
+        }
+        .hidden{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-page" class="login-container">
+        <div id="login-form" class="login-form">
+            <h2>VALORANT STRATEGY HUB</h2>
+            <h3>SIGN IN</h3>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button id="login-btn">ACCESS</button>
+            <a class="create-account-link" id="show-create-account">CREATE NEW ACCOUNT</a>
+            <p id="login-error" style="color: #ff4655; margin-top: 1rem;"></p>
+        </div>
+        <div id="create-account-form" class="login-form hidden">
+            <h2>VALORANT STRATEGY HUB</h2>
+            <h3>CREATE ACCOUNT</h3>
+            <input type="text" id="new-username" placeholder="Choose a username">
+            <input type="password" id="new-password" placeholder="Choose a password">
+            <input type="password" id="confirm-password" placeholder="Confirm password">
+            <button id="create-account-btn">CREATE ACCOUNT</button>
+            <a class="create-account-link" id="show-login">BACK TO SIGN IN</a>
+            <p id="create-account-error" style="color: #ff4655; margin-top: 1rem;"></p>
+        </div>
+    </div>
+    <div id="main-app" class="hidden">
+
+        <nav class="navbar">
+            <h2>VALORANT STRATEGY HUB</h2>
+            <div class="nav-buttons">
+                <button onclick="showFavorites()">FAVORITES</button>
+                <button onclick="logout()">LOG OUT</button>
+            </div>
+        </nav>
+        <div class="filter-container">
+            <select id="role-filter">
+                <option value="all">ALL ROLES</option>
+                <option value="Controller">CONTROLLER</option>
+                <option value="Duelist">DUELIST</option>
+                <option value="Initiator">INITIATOR</option>
+                <option value="Sentinel">SENTINEL</option>
+            </select>
+        </div>
+        <div id="agent-grid" class="agent-grid"></div>
+
+        <div id="agent-details" class="hidden">
+            <div class="agent-details">
+                <div class="agent-image-container">
+                    <img class="agent-image-details" id="agent-detail-image" alt="Agent">
+                    <button onclick="toggleBookmark()" id="bookmark-btn">☆ ADD TO FAVORITES</button>
+                </div>
+                <div class="agent-info">
+                    <button onclick="showAgentGrid()">BACK TO AGENTS</button>
+                    <h2 id="agent-detail-name"></h2>
+                    <p id="agent-detail-description"></p>
+                    
+                    <div class="abilities-grid" id="abilities-container"></div>
+                    <div class="comments-section">
+                        <h3>COMMUNITY STRATEGIES</h3>
+                        <div id="comments-container"></div>
+                        <textarea id="new-comment" placeholder="Share your strategy..."></textarea>
+                        <button onclick="postComment()">POST</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="favorites-page" class="hidden">
+            <div class="navbar">
+                <button onclick="showAgentGrid()">BACK TO AGENTS</button>
+            </div>
+            <div class="agent-grid" id="favorites-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentAgent = null;
+        let agents = [];
+        let comments = JSON.parse(localStorage.getItem('comments')) || {};
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        let userAccounts = JSON.parse(localStorage.getItem('userAccounts')) || {
+            'bob': { password: 'bobpass' } 
+        };
+
+        const loginForm = document.getElementById('login-form');
+        const createAccountForm = document.getElementById('create-account-form');
+        const showCreateAccount = document.getElementById('show-create-account');
+        const showLogin = document.getElementById('show-login');
+        const loginBtn = document.getElementById('login-btn');
+        const createAccountBtn = document.getElementById('create-account-btn');
+
+       
+        showCreateAccount.addEventListener('click', function() {
+            loginForm.classList.add('hidden');
+            createAccountForm.classList.remove('hidden');
+            document.getElementById('login-error').textContent = '';
+        });
+
+        showLogin.addEventListener('click', function() {
+            createAccountForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            document.getElementById('create-account-error').textContent = '';
+        });
+
+        loginBtn.addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if(userAccounts[username] && userAccounts[username].password === password) {
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                initializeApp();
+            } else {
+                document.getElementById('login-error').textContent = 'Invalid credentials';
+            }
+        });
+
+        createAccountBtn.addEventListener('click', function() {
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorElement = document.getElementById('create-account-error');
+            
+            if(!username || !password || !confirmPassword) {
+                errorElement.textContent = 'Please fill in all fields';
+                return;
+            }
+            
+            if(password !== confirmPassword) {
+                errorElement.textContent = 'Passwords do not match';
+                return;
+            }
+            
+            if(username in userAccounts) {
+                errorElement.textContent = 'Username already exists';
+                return;
+            }
+            
+            if(password.length < 6) {
+                errorElement.textContent = 'Password must be at least 6 characters';
+                return;
+            }
+            userAccounts[username] = { password: password };
+            localStorage.setItem('userAccounts', JSON.stringify(userAccounts));
+            
+            errorElement.textContent = '';
+            alert('Account created successfully! Please sign in.');
+            createAccountForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+
+            document.getElementById('new-username').value = '';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+        });
+
+        function logout() {
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('login-page').classList.remove('hidden');
+   
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('login-error').textContent = '';
+        }
+        async function initializeApp() {
+            try {
+                const response = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
+                agents = (await response.json()).data;
+                renderAgentGrid();
+                setupFilters();
+            } catch(error) {
+                console.error('Error loading agents:', error);
+            }
+        }
+        function renderAgentGrid(filterRole = 'all') {
+            const container = document.getElementById('agent-grid');
+            const filteredAgents = filterRole === 'all' 
+                ? agents 
+                : agents.filter(agent => agent.role?.displayName === filterRole);
+            
+            container.innerHTML = filteredAgents.map(agent => `
+                <div class="agent-card" onclick="showAgentDetails('${agent.uuid}')">
+                    <img src="${agent.fullPortrait}" class="agent-image-grid" alt="${agent.displayName}">
+                    <div style="padding: 1rem; text-align: center;">
+                        <h3>${agent.displayName}</h3>
+                        <p>${agent.role?.displayName}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function showAgentDetails(uuid) {
+            currentAgent = agents.find(agent => agent.uuid ===uuid);
+            document.getElementById('agent-grid').classList.add('hidden');
+            document.getElementById('agent-details').classList.remove('hidden');
+            
+            document.getElementById('agent-detail-image').src = currentAgent.fullPortrait;
+            document.getElementById('agent-detail-name').textContent = currentAgent.displayName;
+            document.getElementById('agent-detail-description').textContent = currentAgent.description;
+
+            const abilitiesContainer = document.getElementById('abilities-container');
+            abilitiesContainer.innerHTML = currentAgent.abilities.map(ability => `
+                <div class="ability-card">
+                    <img src="${ability.displayIcon}" class="ability-icon" alt="${ability.displayName}">
+                    <h4>${ability.displayName}</h4>
+                    <p>${ability.description}</p>
+                </div>
+            `).join('');
+            document.getElementById('bookmark-btn').textContent = 
+                favorites.includes(currentAgent.uuid) ? '★ REMOVE FROM FAVORITES' : '☆ ADD TO FAVORITES';
+            
+            renderComments();
+        }
+        function toggleBookmark() {
+            const index = favorites.indexOf(currentAgent.uuid);
+            if (index === -1) {
+                favorites.push(currentAgent.uuid);
+            } else {
+                favorites.splice(index, 1);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            document.getElementById('bookmark-btn').textContent = 
+                favorites.includes(currentAgent.uuid) ? '★ REMOVE FROM FAVORITES' : '☆ ADD TO FAVORITES';
+        }
+        function showFavorites() {
+            document.getElementById('agent-grid').classList.add('hidden');
+            document.getElementById('agent-details').classList.add('hidden');
+            document.getElementById('favorites-page').classList.remove('hidden');
+            
+            const container = document.getElementById('favorites-grid');
+            const favoriteAgents = agents.filter(agent => favorites.includes(agent.uuid));
+            
+            container.innerHTML = favoriteAgents.map(agent => `
+                <div class="agent-card" onclick="showAgentDetails('${agent.uuid}')">
+                    <img src="${agent.fullPortrait}" class="agent-image-grid" alt="${agent.displayName}">
+                    <div style="padding: 1rem; text-align: center;">
+                        <h3>${agent.displayName}</h3>
+                        <p>${agent.role?.displayName}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function renderComments() {
+            const container = document.getElementById('comments-container');
+            const agentComments = comments[currentAgent.uuid] || [];
+            container.innerHTML = agentComments.map((comment, index) => `
+                <div class="comment">
+                    <p>${comment.text}</p>
+                    <small>${new Date(comment.timestamp).toLocaleString()}</small>
+                    <div class="vote-buttons">
+                        <button class="vote-button" onclick="voteComment('${currentAgent.uuid}', ${index}, 'up')">▲</button>
+                        <span class="vote-count">${comment.votes || 0}</span>
+                        <button class="vote-button" onclick="voteComment('${currentAgent.uuid}', ${index}, 'down')">▼</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function postComment() {
+            const commentText = document.getElementById('new-comment').value;
+            if(!commentText) return;
+            
+            const comment = {
+                text: commentText,
+                timestamp: new Date().toISOString(),
+                votes: 0
+            };
+            if(!comments[currentAgent.uuid]) comments[currentAgent.uuid] =[];
+            comments[currentAgent.uuid].push(comment);
+            localStorage.setItem('comments', JSON.stringify(comments));
+            
+            document.getElementById('new-comment').value = '';
+            renderComments();
+        }
+        function voteComment(agentId, commentIndex, direction) {
+            if (!comments[agentId] || !comments[agentId][commentIndex])return;
+            
+            const comment = comments[agentId][commentIndex];
+            if (!comment.votes) comment.votes = 0;
+            
+            if (direction === 'up') {
+                comment.votes++;
+            } else {
+                comment.votes--;
+            }
+            
+            localStorage.setItem('comments', JSON.stringify(comments));
+            renderComments();
+        }
+        function showAgentGrid(){
+            document.getElementById('agent-grid').classList.remove('hidden');
+            document.getElementById('agent-details').classList.add('hidden');
+            document.getElementById('favorites-page').classList.add('hidden');
+        }
+        function setupFilters(){
+            document.getElementById('role-filter').addEventListener('change', function() {
+                renderAgentGrid(this.value);
+            });
+        }
+    </script>
+</body>
+</html>
